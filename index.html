@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Special Question ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3, #ffc3a0);
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    background: rgba(255,255,255,0.93);
+    padding: 40px 25px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 430px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.heart {
+    font-size: 65px;
+    animation: heartbeat 1s infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+h1 {
+    color: #ff3366;
+    font-size: 30px;
+    margin: 15px 0;
+}
+
+p {
+    color: #555;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    touch-action: manipulation;
+}
+
+#yesBtn {
+    background: #ff3366;
+    color: white;
+}
+
+#yesBtn:hover {
+    background: #e6004c;
+    transform: scale(1.08);
+}
+
+#noBtn {
+    background: #eee;
+    color: #555;
+    position: relative;
+}
+
+#success {
+    display: none;
+}
+
+#success h1 {
+    font-size: 32px;
+}
+
+#success p {
+    margin-top: 15px;
+}
+
+.floating-heart {
+    position: fixed;
+    bottom: -50px;
+    font-size: 25px;
+    pointer-events: none;
+    animation: floatUp 5s linear forwards;
+    z-index: 1;
+}
+
+@keyframes floatUp {
+    to {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@media(max-width: 480px) {
+    .container {
+        padding: 35px 20px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    p {
+        font-size: 15px;
+    }
+
+    button {
+        padding: 13px 25px;
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container" id="proposal">
+
+    <div class="heart">❤️</div>
+
+    <h1>Hey, My Special Person!</h1>
+
+    <p>
+        Every moment with you feels magical.
+        You make my world brighter and my heart happier.
+        I have something important to ask you...
+        <br><br>
+        <b>Will you be mine forever? 💍</b>
+    </p>
+
+    <div class="buttons">
+        <button id="yesBtn" onclick="sayYes()">YES! ❤️</button>
+        <button id="noBtn" onclick="sayNo()">No 🙈</button>
+    </div>
+
+</div>
+
+<div class="container" id="success">
+    <div class="heart">💖</div>
+    <h1>YAAAY! 🎉</h1>
+
+    <p>
+        You just made me the happiest person
+        in the world! ❤️
+        <br><br>
+        I promise to fill your life with love,
+        laughter and beautiful memories.
+        <br><br>
+        <b>Forever starts with us! 💍🥰</b>
+    </p>
+</div>
+
+<script>
+// YES BUTTON
+function sayYes() {
+    document.getElementById("proposal").style.display = "none";
+    document.getElementById("success").style.display = "block";
+
+    startConfetti();
+
+    // Create floating hearts
+    for (let i = 0; i < 30; i++) {
+        setTimeout(createHeart, i * 120);
+    }
+}
+
+// NO BUTTON
+function sayNo() {
+    const noBtn = document.getElementById("noBtn");
+    noBtn.innerText = "Are you sure? 🥺";
+
+    setTimeout(() => {
+        noBtn.innerText = "Try again 🙈";
+    }, 1000);
+}
+
+// FLOATING HEARTS
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "floating-heart";
+    heart.innerHTML = ["❤️", "💖", "💕", "💗", "💘"][
+        Math.floor(Math.random() * 5)
+    ];
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
+}
+
+// CONFETTI ANIMATION
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+let animationRunning = false;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function startConfetti() {
+    if (animationRunning) return;
+
+    animationRunning = true;
+    particles = [];
+
+    for (let i = 0; i < 220; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -canvas.height,
+            size: Math.random() * 8 + 4,
+            speed: Math.random() * 4 + 2,
+            color: [
+                "#ff3366",
+                "#ffcc00",
+                "#ff69b4",
+                "#9b59b6",
+                "#00c9a7"
+            ][Math.floor(Math.random() * 5)],
+            rotation: Math.random() * 360
+        });
+    }
+
+    animateConfetti();
+}
+
+function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p) => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI / 180);
+
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2,
+                     p.size, p.size);
+
+        ctx.restore();
+
+        p.y += p.speed;
+        p.x += Math.sin(p.y / 30);
+        p.rotation += 4;
+    });
+
+    particles = particles.filter(p => p.y < canvas.height + 20);
+
+    if (particles.length > 0) {
+        requestAnimationFrame(animateConfetti);
+    } else {
+        animationRunning = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
+// Background floating hearts
+setInterval(createHeart, 800);
+
+</script>
+
+</body>
+</html>
